@@ -12,7 +12,7 @@ const initOptions = {
 const config = {
   host: 'localhost',
   port: 5432,
-  database: 'full_stack_counter',
+  database: 'Counter_db',
   user: 'postgres',
 };
 
@@ -48,10 +48,14 @@ app.get("/reset", function (req, response) {
 });
 
 
-// app.get("/decrease", function (req, response){
-//   counter--;
-//   response.send(counter.toString());
-// });
+app.get("/decrease", function (req, response){
+  db.one(`INSERT INTO counter("current_count") VALUES(-1); 
+  SELECT SUM(current_count) AS decrease FROM counter`)
+  .then(function (result){
+    console.log(result);
+    response.send(result.decrease);
+  });
+  });
 
 app.listen(3000, function(){
   console.log("server listening on post 3000");
